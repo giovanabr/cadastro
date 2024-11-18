@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="css/login.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Login</h1>
+        <form id="loginForm">
+            <label for="username">Nome de Usuário:</label>
+            <input type="text" id="username" name="username" required>
+            
+            <label for="password">Senha:</label>
+            <input type="password" id="password" name="password" required>
+            
+            <button type="submit">Entrar</button>
+        </form>
+        <p id="loginMessage"></p>
+        <p>Não tem uma conta? <a href="cadastro.html">Cadastre-se</a></p>
+        
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async function (event) {
+          event.preventDefault();
+          const username = document.getElementById('username').value;
+          const password = document.getElementById('password').value;
+      
+          try {
+            const response = await fetch('/api/login', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ username, password })
+            });
+      
+            const result = await response.json();
+            document.getElementById('loginMessage').textContent = result.message;
+      
+            if (response.ok) {
+              // Salva o token no armazenamento local
+              localStorage.setItem('token', result.token);
+              // Redireciona para a página de listagem de usuários
+              window.location.href = '/users.html';
+            }
+          } catch (error) {
+            console.error('Erro:', error);
+            document.getElementById('loginMessage').textContent = 'Erro no login.';
+          }
+        });
+      </script>
+      
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro</title>
+    <link rel="stylesheet" href="css/cadastro.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Cadastre-se</h1>
+        <form id="signupForm">
+            <label for="username">Nome de Usuário:</label>
+            <input type="text" id="username" name="username" required>
+            
+            <label for="email">E-mail:</label>
+            <input type="email" id="email" name="email" required>
+            
+            <label for="password">Senha:</label>
+            <input type="password" id="password" name="password" required>
+            
+            <button type="submit">Cadastrar</button>
+        </form>
+        <p id="signupMessage"></p>
+        <p>Já tem uma conta? <a href="login.html">Faça login</a></p>
+    </div>
+
+    
+    <script>
+       document.getElementById('signupForm').addEventListener('submit', async function (event) {
+    event.preventDefault(); // Previne o envio padrão do formulário
+
+    // Captura os valores dos campos
+    const username = document.getElementById('username').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    try {
+        // Chamada ao endpoint /api/signup
+        const response = await fetch('/api/signup', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, email, password }),
+});
+
+
+        const result = await response.json(); // Converte a resposta em JSON
+
+        // Exibe a mensagem de sucesso ou erro
+        document.getElementById('signupMessage').textContent = result.message;
+
+        if (response.ok) {
+            // Armazena o token no localStorage e redireciona
+            localStorage.setItem('token', result.token);
+            window.location.href = '/users.html'; // Redireciona para a página de usuários
+        }
+    } catch (error) {
+        console.error('Erro no cadastro:', error);
+        document.getElementById('signupMessage').textContent = 'Erro ao cadastrar. Tente novamente.';
+    }
+});
+
+      </script>
+      
+
+    </script>
+</body>
+</html>

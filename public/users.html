@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuários Cadastrados</title>
+    <link rel="stylesheet" href="css/list.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Usuários Cadastrados</h1>
+        <ul id="user-list"></ul>
+    </div>
+
+    <script>
+        async function fetchUsers() {
+            const response = await fetch('/api/users', {
+                headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
+            });
+
+            if (response.ok) {
+                const users = await response.json();
+                const userList = document.getElementById('user-list');
+                users.forEach(user => {
+                    const li = document.createElement('li');
+                    li.textContent = `${user.username} - ${user.email}`;
+                    userList.appendChild(li);
+                });
+            } else {
+                alert('Falha ao carregar a lista de usuários.');
+            }
+        }
+
+        fetchUsers();
+    </script>
+</body>
+</html>
